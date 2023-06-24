@@ -18,5 +18,4 @@ LINKED_IN_PASSWORD= your password in base64 format
 
 5. Execute the following command to run uvicorn
 ``` uvicorn main:app --reload ```
-6. Open another terminal and go to project directory
-7. You can visit fastapi docs from [backend](http://127.0.0.1:8000/docs)
+6. You can now visitfastapi docs  for api text from [backend](http://127.0.0.1:8000/docs)
