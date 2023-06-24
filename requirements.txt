@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+python-multipart
+playwright
+autopep8
+selenium
+aiofiles
+python-dotenv
