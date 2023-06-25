@@ -134,3 +134,58 @@ def scrape_company_info(company_name):
         if driver:
             driver.close()
         return company_url, employee_count
+
+
+from playwright.sync_api import Playwright, sync_playwright, expect
+
+def scrape_info_using_playwright(company_list):
+    playwright = sync_playwright().start()
+    browser = playwright.chromium.launch(headless=False)
+    context = browser.new_context()
+    op_data = []
+    try:
+        email, password = get_email_password()
+        if email is not None  and password is not None:
+            page = context.new_page()
+            page.goto("https://www.linkedin.com/login")
+            page.get_by_label("Email or phone").click()
+            page.get_by_label("Email or phone").fill("er.rushabhdoshi@gmail.com")
+            page.get_by_label("Email or phone").press("Tab")
+            page.get_by_label("Password", exact=True).fill("@irswan02")
+            page.get_by_label("Password", exact=True).press("Enter")
+            for data in company_list:
+                company_url = "Not Found"
+                employee_count = "Not Found"
+                try: 
+                    page.get_by_placeholder("Search", exact=True).click()
+                    page.get_by_placeholder("Search", exact=True).fill(data[0])
+                    page.get_by_placeholder("Search", exact=True).press("Enter")
+                    page.get_by_role("group", name="Search results for "+data[0]+".")
+                    element = page.locator("xpath=//div[contains(@data-chameleon-result-urn,'company')]").nth(0).locator("//a").nth(0)
+                    company_url = element.get_attribute("href")
+                    print(company_url)
+                    # element.click()
+                    page.goto(company_url+"/about")
+                    # page.get_by_role("link", name="About", exact=True).click()
+                    employee_count = page.locator("xpath=//dl[contains(., 'Company size')]//dd[contains(.,'employees')]").inner_html()
+                    employee_count = employee_count.replace("employees","").strip()
+                    print(company_url, employee_count)
+                    data.extend([company_url, employee_count])
+                    op_data.append(data)
+            
+                except Exception as e:
+                    print("error is:{0}".format(e))
+                    data.extend([company_url, employee_count])
+                    op_data.append(data)
+            context.close()
+            browser.close()
+            return op_data
+        else:
+            print("Please provide your email_id and password")
+            context.close()
+            browser.close()
+            return op_data
+        
+    except Exception as e:
+        print("error is:{0}".format(e))
+        return op_data
