@@ -1,8 +1,8 @@
 # LinkedIn company url with employee count using selenium
-## generate file probable metadata and probable summary
 ---
 ## Required python(version >3.7)
 ---
+#### installtion follow this link [playwright](https://playwright.dev/python/docs/intro)
 ### Run locally
 1. Clone this repo.
 2. Go to project in terminal   
