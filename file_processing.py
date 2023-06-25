@@ -4,7 +4,7 @@ import threading
 import csv
 import os
 import time
-from scrape_url_employee_count import scrape_company_info
+from scrape_url_employee_count import scrape_company_info, scrape_info_using_playwright
 file_process= queue.Queue()
 ip_data = []
 op_data = []
@@ -29,12 +29,18 @@ def getCompanyInfo():
                     print(op_header, ip_data)
                     op_header.append("company_url")
                     op_header.append("employee_count")
-                    for data in ip_data:
-                        print(data,data[0])
-                        company_url, email_count = scrape_company_info(data[0]) # assuming company_name is the first one
-                        data.append(company_url)
-                        data.append(email_count)
-                        op_data.append(data)
+                    # ---------------------selenium code start--------------------------
+                    # for data in ip_data:
+                    #     print(data,data[0])
+                    #     company_url, email_count = scrape_company_info(data[0]) # assuming company_name is the first one
+                    #     data.append(company_url)
+                    #     data.append(email_count)
+                    #     op_data.append(data)
+                    # ---------------------selenium code end--------------------------
+                    
+                    #----------------------playwrightcode start-----------------------
+                    op_data = scrape_info_using_playwright(ip_data)
+                    #----------------------playwrightcode end-----------------------
                     with open(output_file_name,"w") as opfile:
                         writer = csv.writer(opfile)
                         writer.writerow(op_header)
